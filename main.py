@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 
-
 class Person(ABC):
 
     @abstractmethod
@@ -50,38 +49,101 @@ class Teacher(Person):
         print(f"Email         : {self.email}")
         print(f"Subject       : {self.subject}")
 
-student1 = Student("STD101","Alex",19,"alex@gmail.com",21)
-teacher1 = Teacher("EMP101","Bob",30,"bob@gmail.com","Maths")
+class ManagementSystem:
+    def __init__(self):
+        self.students: dict[str, Student] = {}        
+        self.teachers: dict[str, Teacher]= {}
+        self.next_student_id = 1
+        self.next_teacher_id = 1
 
-student1.get_role()
-student1.show_details()
-        
-teacher1.get_role()
-teacher1.show_details()
+    def register_student(self):
+        student_id = f"STD{self.next_student_id:03d}"
+        name = input("Enter your name :- ")
+        age = int(input("Enter your age :- "))
+        email = input("Enter your mail :- ")
+        roll_no = int(input("Enter your roll no :- "))
 
+        new_student = Student(student_id, name, age, email, roll_no) 
 
-print("press 1 to register a student")
-print("press 2 to register a teacher")
-print("press 3 to add grades ")
-print("press 4 to show a student details")
-print("press 5 to show a teacher details")
+        self.students[student_id] = new_student
 
-choice = int(input("Enter your choice :- "))
+        self.next_student_id += 1
 
-if choice == 1:
-    pass
+        print("Student Registered Successfully!")
 
-elif choice == 2:
-    pass
+    def show_student_details(self):
+        std_id = input("Student ID :- ")
 
-elif choice == 3:
-    pass
+        if std_id in self.students:
+            student = self.students[std_id]
+            student.show_details()
 
-elif choice == 4:
-    pass
+        else:
+            print("Student not found")
 
-elif choice == 5:
-    pass
+    def register_teacher(self):
+        emp_id = f"EMP{self.next_teacher_id:03d}"
+        name = input("Enter your name :- ")
+        age = int(input("Enter your age :- "))
+        email = input("Enter your mail :- ")
+        subject = input("Enter the subject you teach :- ")
 
-else:
-    print("Invalid choice")
+        new_teacher = Teacher(emp_id, name, age, email, subject)
+
+        self.teachers[emp_id] = new_teacher
+
+        self.next_teacher_id += 1
+
+        print("Teacher Registered Successfully!")
+
+    def show_teacher_details(self):
+        emp_id = input("Employee ID")
+
+        if emp_id in self.teachers:
+            teacher = self.teachers[emp_id]
+            teacher.show_details()
+
+        else:
+            print("Teacher not found")
+
+system = ManagementSystem()
+
+while True:
+    print("press 1 to register a student")
+    print("press 2 to register a teacher")
+    print("press 3 to add grades ")
+    print("press 4 to show a student details")
+    print("press 5 to show a teacher details")
+    print("press 6 to exit")
+
+    while True:
+        try:
+            choice = int(input("Enter your choice :- "))
+
+            if 1 <= choice <= 6:
+                break
+
+            else:
+                print("Enter a choice between (1-6)")
+
+        except ValueError:
+            print("Enter a number")
+
+    if choice == 1:
+        system.register_student()
+
+    elif choice == 2:
+        system.register_teacher()
+
+    elif choice == 3:
+        pass
+
+    elif choice == 4:
+        system.show_student_details()
+
+    elif choice == 5:
+        system.show_teacher_details()
+
+    elif choice == 6:
+        print("Exiting... Goodbye!")
+        break
