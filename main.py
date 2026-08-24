@@ -23,12 +23,16 @@ class Student(Person):
         return "Student"
 
     def show_details(self):
+        print(f"\n--- Student Details ({self.student_id}) ---")
         print(f"Student ID   : {self.student_id}")
         print(f"Name         : {self.name}")
         print(f"Age          : {self.age}")
         print(f"Email        : {self.email}")
         print(f"Roll No      : {self.roll_no}")
         print(f"Grades       : {self.grades}")
+
+    def add_grade(self, subject, grade):
+        self.grades[subject] = grade
 
 
 class Teacher(Person):
@@ -43,6 +47,7 @@ class Teacher(Person):
         return "Teacher"
 
     def show_details(self):
+        print(f"\n--- Teacher Details ({self.emp_id}) ---")
         print(f"Employee ID   : {self.emp_id}")
         print(f"Name          : {self.name}")
         print(f"Age           : {self.age}")
@@ -79,7 +84,33 @@ class ManagementSystem:
             student.show_details()
 
         else:
-            print("Student not found")
+            print("Student Not Found")
+
+    def add_student_grade(self):
+        std_id = input("Student ID :- ")
+
+        if std_id in self.students:
+            subject = input("Subject : - ")
+            while True:
+                try:
+                    grade = int(input("Grade (0-100) :- "))
+
+                    if 0 <= grade <= 100:
+                        break
+
+                    else:
+                        print("Please enter marks between (0-100)")
+
+                except ValueError:
+                    print("Enter a number")
+
+            student = self.students[std_id]
+            student.add_grade(subject, grade)
+            print("Grade added successfully!")
+
+        else:
+            print("Student Not Found")
+
 
     def register_teacher(self):
         emp_id = f"EMP{self.next_teacher_id:03d}"
@@ -97,7 +128,7 @@ class ManagementSystem:
         print("Teacher Registered Successfully!")
 
     def show_teacher_details(self):
-        emp_id = input("Employee ID")
+        emp_id = input("Employee ID :- ")
 
         if emp_id in self.teachers:
             teacher = self.teachers[emp_id]
@@ -109,6 +140,7 @@ class ManagementSystem:
 system = ManagementSystem()
 
 while True:
+    print("\n--- Management System Menu ---")
     print("press 1 to register a student")
     print("press 2 to register a teacher")
     print("press 3 to add grades ")
@@ -136,7 +168,7 @@ while True:
         system.register_teacher()
 
     elif choice == 3:
-        pass
+        system.add_student_grade()
 
     elif choice == 4:
         system.show_student_details()
