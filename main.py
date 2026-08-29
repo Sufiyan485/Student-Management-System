@@ -34,6 +34,17 @@ class Student(Person):
     def add_grade(self, subject, grade):
         self.grades[subject] = grade
 
+    def update_name(self,new_name):
+        self.name = new_name 
+
+    def update_age(self,new_age):
+        self.age = new_age
+
+    def update_email(self,new_email):
+        self.email = new_email
+
+    def update_roll_no(self,new_roll_no):
+        self.roll_no = new_roll_no
 
 class Teacher(Person):
     def __init__(self, emp_id, name, age, email, subject):
@@ -84,7 +95,7 @@ class ManagementSystem:
             student.show_details()
 
         else:
-            print("Student Not Found")
+            print("Student Not Found!")
 
     def add_student_grade(self):
         std_id = input("Student ID :- ")
@@ -109,8 +120,25 @@ class ManagementSystem:
             print("Grade added successfully!")
 
         else:
-            print("Student Not Found")
+            print("Student Not Found!")
 
+    def update_student(self):
+        std_id = input("Student ID :- ")
+
+        if std_id in self.students:
+            student = self.students[std_id]
+            student.show_details()
+            print("\n--- Student Details Update Menu ---")
+            print("press 1 to update name")
+            print("press 2 to update age")
+            print("press 3 to update email")
+            print("press 4 to update roll_no")
+            print("press 5 if you are done")
+
+
+
+        else:
+            print("Student Not Found!")
 
     def register_teacher(self):
         emp_id = f"EMP{self.next_teacher_id:03d}"
@@ -135,7 +163,7 @@ class ManagementSystem:
             teacher.show_details()
 
         else:
-            print("Teacher not found")
+            print("Teacher not found!")
 
 system = ManagementSystem()
 
