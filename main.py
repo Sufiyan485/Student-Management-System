@@ -86,12 +86,33 @@ class ManagementSystem:
         self.next_student_id = 1
         self.next_teacher_id = 1
 
+    @staticmethod
+    def get_valid_int(prompt,min_value,max_value):
+        while True:
+            try:
+                value = int(input(prompt))
+                if min_value <= value <= max_value:
+                    return value
+                else:
+                    print(f"Please enter a value between {min_value} and {max_value}")
+            except ValueError:
+                print("Enter a number")
+
+    @staticmethod
+    def get_valid_text(prompt):
+        while True:
+            value = input(prompt).strip()
+            if value:
+                return value
+            else:
+                print("Input cannot be empty. Please enter a valid text.")
+        
     def register_student(self):
         student_id = f"STD{self.next_student_id:03d}"
-        name = input("Enter your name :- ")
-        age = int(input("Enter your age :- "))
-        email = input("Enter your mail :- ")
-        roll_no = int(input("Enter your roll no :- "))
+        name = ManagementSystem.get_valid_text("Enter your name :- ")
+        age = ManagementSystem.get_valid_int("Enter your age :- ", 5, 100)
+        email = ManagementSystem.get_valid_text("Enter your mail :- ")
+        roll_no = ManagementSystem.get_valid_int("Enter your roll_no :- ", 1, 9999)
 
         new_student = Student(student_id, name, age, email, roll_no)
         self.students[student_id] = new_student
@@ -112,18 +133,8 @@ class ManagementSystem:
         std_id = input("Student ID :- ")
 
         if std_id in self.students:
-            subject = input("Subject :- ")
-
-            while True:
-                try:
-                    grade = int(input("Grade (0-100) :- "))
-                    if 0 <= grade <= 100:
-                        break
-                    else:
-                        print("Please enter marks between (0-100)")
-                except ValueError:
-                    print("Enter a number")
-
+            subject = ManagementSystem.get_valid_text("Subject :- ").capitalize()
+            grade = ManagementSystem.get_valid_int("Grade (0-100) :- ", 0,100)
             student = self.students[std_id]
             student.add_grade(subject, grade)
             print("Grade added successfully!")
@@ -145,33 +156,25 @@ class ManagementSystem:
                 print("press 4 to update roll_no")
                 print("press 5 if you are done")
 
-                while True:
-                    try:
-                        choice = int(input("Enter your choice :- "))
-                        if 1 <= choice <= 5:
-                            break
-                        else:
-                            print("Enter a choice between (1-5)")
-                    except ValueError:
-                        print("Enter a number")
-
+                choice = ManagementSystem.get_valid_int("Enter your choice :- ", 1, 5)
+                
                 if choice == 1:
-                    new_name = input("Enter new name :- ")
+                    new_name = ManagementSystem.get_valid_text("Enter new name :- ")
                     student.update_name(new_name)
                     print("Name updated successfully!")
 
                 elif choice == 2:
-                    new_age = int(input("Enter new age :- "))
+                    new_age = ManagementSystem.get_valid_int("Enter new age :- ", 5, 100)
                     student.update_age(new_age)
                     print("Age updated successfully!")
 
                 elif choice == 3:
-                    new_email = input("Enter new email :- ")
+                    new_email = ManagementSystem.get_valid_text("Enter new email :- ")
                     student.update_email(new_email)
                     print("Email updated successfully!")
 
                 elif choice == 4:
-                    new_roll_no = int(input("Enter new roll no :- "))
+                    new_roll_no = ManagementSystem.get_valid_int("Enter new roll_no :- ", 1, 9999)
                     student.update_roll_no(new_roll_no)
                     print("Roll number updated successfully!")
 
@@ -204,10 +207,10 @@ class ManagementSystem:
 
     def register_teacher(self):
         emp_id = f"EMP{self.next_teacher_id:03d}"
-        name = input("Enter your name :- ")
-        age = int(input("Enter your age :- "))
-        email = input("Enter your mail :- ")
-        subject = input("Enter the subject you teach :- ")
+        name = ManagementSystem.get_valid_text("Enter your name :- ")
+        age = ManagementSystem.get_valid_int("Enter your age :- ", 5, 100)
+        email = ManagementSystem.get_valid_text("Enter your mail :- ")
+        subject = ManagementSystem.get_valid_text("Enter the subject you teach :- ").capitalize()
 
         new_teacher = Teacher(emp_id, name, age, email, subject)
         self.teachers[emp_id] = new_teacher
@@ -239,33 +242,25 @@ class ManagementSystem:
                 print("press 4 to update subject")
                 print("press 5 if you are done")
 
-                while True:
-                    try:
-                        choice = int(input("Enter your choice :- "))
-                        if 1 <= choice <= 5:
-                            break
-                        else:
-                            print("Enter a choice between (1-5)")
-                    except ValueError:
-                        print("Enter a number")
+                choice = ManagementSystem.get_valid_int("Enter your choice :- ", 1, 5)
 
                 if choice == 1:
-                    new_name = input("Enter new name :- ")
+                    new_name = ManagementSystem.get_valid_text("Enter new name :- ")
                     teacher.update_name(new_name)
                     print("Name updated successfully!")
 
                 elif choice == 2:
-                    new_age = int(input("Enter new age :- "))
+                    new_age =  ManagementSystem.get_valid_int("Enter new age :- ", 5, 100)
                     teacher.update_age(new_age)
                     print("Age updated successfully!")
 
                 elif choice == 3:
-                    new_email = input("Enter new email :- ")
+                    new_email = ManagementSystem.get_valid_text("Enter new email :- ")
                     teacher.update_email(new_email)
                     print("Email updated successfully!")
 
                 elif choice == 4:
-                    new_subject = input("Enter new subject :- ")
+                    new_subject = ManagementSystem.get_valid_text("Enter new subject :- ").capitalize()
                     teacher.update_subject(new_subject)
                     print("Subject updated successfully!")
 
@@ -309,17 +304,9 @@ while True:
     print("press 7 to delete a student")
     print("press 8 to update teacher details")
     print("press 9 to delete a teacher")
-    print("press 10 to exit")
+    print("press 0 to exit")
 
-    while True:
-        try:
-            choice = int(input("Enter your choice :- "))
-            if 1 <= choice <= 10:
-                break
-            else:
-                print("Enter a choice between (1-10)")
-        except ValueError:
-            print("Enter a number")
+    choice = ManagementSystem.get_valid_int("Enter your choice :- ", 0, 9)
 
     if choice == 1:
         system.register_student()
@@ -348,6 +335,6 @@ while True:
     elif choice == 9:
         system.delete_teacher()
 
-    elif choice == 10:
+    elif choice == 0:
         print("Exiting... Goodbye!")
         break
