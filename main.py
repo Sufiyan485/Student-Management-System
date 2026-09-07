@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-
+import json
 
 class Person(ABC):
     @abstractmethod
@@ -31,6 +31,16 @@ class Student(Person):
         print(f"Email        : {self.email}")
         print(f"Roll No      : {self.roll_no}")
         print(f"Grades       : {self.grades}")
+
+    def to_dict(self):
+        return {
+            "student_id": self.student_id,
+            "name": self.name,
+            "age": self.age,
+            "email": self.email,
+            "roll_no": self.roll_no,
+            "grades": self.grades
+        }
 
     def add_grade(self, subject, grade):
         self.grades[subject] = grade
@@ -66,6 +76,15 @@ class Teacher(Person):
         print(f"Age           : {self.age}")
         print(f"Email         : {self.email}")
         print(f"Subject       : {self.subject}")
+
+    def to_dict(self):
+        return {
+            "emp_id": self.emp_id,
+            "name": self.name,
+            "age": self.age,
+            "email": self.email,
+            "subject": self.subject
+        }
 
     def update_name(self, new_name):
         self.name = new_name
@@ -106,12 +125,39 @@ class ManagementSystem:
                 return value
             else:
                 print("Input cannot be empty. Please enter a valid text.")
-        
+
+    @staticmethod
+    def get_valid_email(prompt):
+        while True:
+            email = ManagementSystem.get_valid_text(prompt)
+            if "@" in email:
+                return email
+            else:
+                print("Please enter a valid email address.")
+
+    def get_students_data(self):
+        students_data = {}
+        for student_id, student in self.students.items():
+            students_data[student_id] = student.to_dict()
+        return students_data
+
+    def get_data(self):
+        data = {
+            "students": self.get_students_data(),
+            "teachers": self.get_teachers_data()
+        }
+        return data
+
+    def save_data_to_file(self, filename):
+        data = self.get_data()
+        with open(filename, 'w') as f:
+            json.dump(data, f, indent=4)
+
     def register_student(self):
         student_id = f"STD{self.next_student_id:03d}"
         name = ManagementSystem.get_valid_text("Enter your name :- ")
         age = ManagementSystem.get_valid_int("Enter your age :- ", 5, 100)
-        email = ManagementSystem.get_valid_text("Enter your mail :- ")
+        email = ManagementSystem.get_valid_email("Enter your email :- ")
         roll_no = ManagementSystem.get_valid_int("Enter your roll_no :- ", 1, 9999)
 
         new_student = Student(student_id, name, age, email, roll_no)
@@ -119,6 +165,7 @@ class ManagementSystem:
         self.next_student_id += 1
 
         print("Student Registered Successfully!")
+        print(f"Student ID :- {student_id}")
 
     def show_student_details(self):
         std_id = input("Student ID :- ")
@@ -169,7 +216,7 @@ class ManagementSystem:
                     print("Age updated successfully!")
 
                 elif choice == 3:
-                    new_email = ManagementSystem.get_valid_text("Enter new email :- ")
+                    new_email = ManagementSystem.get_valid_email("Enter new email :- ")
                     student.update_email(new_email)
                     print("Email updated successfully!")
 
@@ -185,7 +232,7 @@ class ManagementSystem:
             print("Student Not Found!")
 
     def delete_student(self):
-        std_id = input("Student ID :-")
+        std_id = input("Student ID :- ")
 
         if std_id in self.students:
             student = self.students[std_id]
@@ -205,11 +252,17 @@ class ManagementSystem:
         else:
             print("Student Not Found!")
 
+    def get_teachers_data(self):
+        teachers_data = {}
+        for emp_id, teacher in self.teachers.items():
+            teachers_data[emp_id] = teacher.to_dict()
+        return teachers_data
+
     def register_teacher(self):
         emp_id = f"EMP{self.next_teacher_id:03d}"
         name = ManagementSystem.get_valid_text("Enter your name :- ")
         age = ManagementSystem.get_valid_int("Enter your age :- ", 5, 100)
-        email = ManagementSystem.get_valid_text("Enter your mail :- ")
+        email = ManagementSystem.get_valid_email("Enter your email :- ")
         subject = ManagementSystem.get_valid_text("Enter the subject you teach :- ").capitalize()
 
         new_teacher = Teacher(emp_id, name, age, email, subject)
@@ -217,6 +270,7 @@ class ManagementSystem:
         self.next_teacher_id += 1
 
         print("Teacher Registered Successfully!")
+        print(f"Employee ID :- {emp_id}")
 
     def show_teacher_details(self):
         emp_id = input("Employee ID :- ")
@@ -255,7 +309,7 @@ class ManagementSystem:
                     print("Age updated successfully!")
 
                 elif choice == 3:
-                    new_email = ManagementSystem.get_valid_text("Enter new email :- ")
+                    new_email = ManagementSystem.get_valid_email("Enter new email :- ")
                     teacher.update_email(new_email)
                     print("Email updated successfully!")
 
@@ -336,5 +390,6 @@ while True:
         system.delete_teacher()
 
     elif choice == 0:
+        system.save_data_to_file("data.json")
         print("Exiting... Goodbye!")
         break
