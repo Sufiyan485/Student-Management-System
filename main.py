@@ -153,6 +153,28 @@ class ManagementSystem:
         with open(filename, 'w') as f:
             json.dump(data, f, indent=4)
 
+    def load_students_data(self, data):
+        for student_id, student_info in data.items():
+            student = Student(
+                student_id=student_info["student_id"],
+                name=student_info["name"],
+                age=student_info["age"],
+                email=student_info["email"],
+                roll_no=student_info["roll_no"]
+            )
+            for subject, grade in student_info.get("grades", {}).items():
+                student.add_grade(subject, grade)
+            self.students[student_id] = student
+
+    def load_data_from_file(self, filename):
+        try:
+            with open(filename, 'r') as f:
+                data = json.load(f)
+                self.load_students_data(data.get("students", {}))
+                self.load_teachers_data(data.get("teachers", {}))
+        except FileNotFoundError:
+            print("No saved data found. Starting fresh.")
+
     def register_student(self):
         student_id = f"STD{self.next_student_id:03d}"
         name = ManagementSystem.get_valid_text("Enter your name :- ")
@@ -258,6 +280,17 @@ class ManagementSystem:
             teachers_data[emp_id] = teacher.to_dict()
         return teachers_data
 
+    def load_teachers_data(self, data):
+        for emp_id, teacher_info in data.items():
+            teacher = Teacher(
+                emp_id=teacher_info["emp_id"],
+                name=teacher_info["name"],
+                age=teacher_info["age"],
+                email=teacher_info["email"],
+                subject=teacher_info["subject"]
+            )
+            self.teachers[emp_id] = teacher
+
     def register_teacher(self):
         emp_id = f"EMP{self.next_teacher_id:03d}"
         name = ManagementSystem.get_valid_text("Enter your name :- ")
@@ -346,6 +379,7 @@ class ManagementSystem:
             print("Teacher not found!")
 
 system = ManagementSystem()
+system.load_data_from_file("data.json")
 
 while True:
     print("\n--- Management System Menu ---")
