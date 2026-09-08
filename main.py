@@ -172,8 +172,23 @@ class ManagementSystem:
                 data = json.load(f)
                 self.load_students_data(data.get("students", {}))
                 self.load_teachers_data(data.get("teachers", {}))
+
+                self.recalculate_next_ids()
         except FileNotFoundError:
-            print("No saved data found. Starting fresh.")
+            print("\nNo saved data found. Starting fresh!")
+
+    def recalculate_next_ids(self):
+            students_ids = []
+            for student_id in self.students.keys():
+                students_ids.append(int(student_id[3:]))
+            highest_student_id = max(students_ids) if students_ids else 0
+            self.next_student_id = highest_student_id + 1
+
+            teachers_ids = []
+            for emp_id in self.teachers.keys():
+                teachers_ids.append(int(emp_id[3:]))
+            highest_teacher_id = max(teachers_ids) if teachers_ids else 0
+            self.next_teacher_id = highest_teacher_id + 1
 
     def register_student(self):
         student_id = f"STD{self.next_student_id:03d}"
