@@ -1,0 +1,56 @@
+{
+    "students": {
+        "STD001": {
+            "student_id": "STD001",
+            "name": "Alex",
+            "age": 19,
+            "email": "alex@gmail.com",
+            "roll_no": 12,
+            "grades": {
+                "Maths": 95,
+                "Physics": 88
+            }
+        },
+        "STD002": {
+            "student_id": "STD002",
+            "name": "Ahmed",
+            "age": 21,
+            "email": "ahmed@gmail.com",
+            "roll_no": 15,
+            "grades": {
+                "Maths": 90
+            }
+        },
+        "STD003": {
+            "student_id": "STD003",
+            "name": "Saud",
+            "age": 20,
+            "email": "saud@gmail.com",
+            "roll_no": 18,
+            "grades": {}
+        }
+    },
+    "teachers": {
+        "EMP001": {
+            "emp_id": "EMP001",
+            "name": "John",
+            "age": 33,
+            "email": "john@gmail.com",
+            "subject": "Physics"
+        },
+        "EMP002": {
+            "emp_id": "EMP002",
+            "name": "Harry",
+            "age": 30,
+            "email": "harry@gmail.com",
+            "subject": "Maths"
+        },
+        "EMP003": {
+            "emp_id": "EMP003",
+            "name": "Fatima",
+            "age": 33,
+            "email": "fatima@gmail.com",
+            "subject": "English"
+        }
+    }
+}
